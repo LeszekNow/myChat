@@ -18,11 +18,16 @@
     <input type="text" id="messageArea" placeholder="Enter message">
 </form>
 
+<form onsubmit="sendNickname(); return false" style="text-align: center">
+    <input type="text" id="nicknameArea" placeholder="Enter nickname">
+</form>
+
 <script type="text/javascript">
     var websocketLink = "ws://localhost:8080/room";
     var infoText = document.getElementById("info");
     var websocket = new WebSocket(websocketLink);
     var textArea = document.getElementById("messageArea");
+    var nicknameArea = document.getElementById("nicknameArea");
     var messagesArea = document.getElementById("messages");
 
     websocket.onopen = function (ev) {
@@ -30,12 +35,19 @@
     }
     websocket.onmessage = function (ev) {
         messagesArea.innerHTML = messagesArea.innerHTML + "<li>" + ev.data + "<li>";
-       // infoText.innerHTML = "Message has been delivered!";
+       messagesArea.scrollTop = messagesArea.scrollHeight; // auto down-scroll
+        // infoText.innerHTML = "Message has been delivered!";
     }
 
     function sendMessage(){
         var text = textArea.value;
         textArea.value = "";
+        websocket.send(text);
+    }
+
+    function sendNickname(){
+        var text = nicknameArea.value;
+        nicknameArea.value = "";
         websocket.send(text);
     }
 
